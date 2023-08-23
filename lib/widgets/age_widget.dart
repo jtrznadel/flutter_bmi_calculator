@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 
 class AgeWidget extends StatefulWidget {
-  const AgeWidget({
-    super.key,
-  });
+  final int initialAge;
+  final ValueChanged<int> onAgeChanged;
+  const AgeWidget({super.key, this.initialAge = 22, required this.onAgeChanged});
 
   @override
   State<AgeWidget> createState() => _AgeWidgetState();
 }
 
 class _AgeWidgetState extends State<AgeWidget> {
-  int age = 22;
+  late int age;
+
+  @override
+  void initState() {
+    super.initState();
+    age = widget.initialAge;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +26,12 @@ class _AgeWidgetState extends State<AgeWidget> {
       padding: const EdgeInsets.all(15),
       width: size.width * 0.42,
       height: size.width * 0.42,
-      decoration: BoxDecoration(
-          border: Border.all(width: 2, color: Colors.grey),
-          borderRadius: const BorderRadius.all(Radius.circular(15))),
+      decoration: const BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(color: Colors.grey, blurRadius: 15.0, offset: Offset(5, 10))
+          ],
+          borderRadius: BorderRadius.all(Radius.circular(15))),
       child: Column(children: [
         const Text(
           "Age",
@@ -38,6 +47,7 @@ class _AgeWidgetState extends State<AgeWidget> {
                 onPressed: () {
                   setState(() {
                     age -= 1;
+                    widget.onAgeChanged(age);
                   });
                 },
                 icon: const Icon(Icons.remove)),
@@ -52,6 +62,7 @@ class _AgeWidgetState extends State<AgeWidget> {
                 onPressed: () {
                   setState(() {
                     age += 1;
+                    widget.onAgeChanged(age);
                   });
                 },
                 icon: const Icon(Icons.add)),

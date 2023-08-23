@@ -13,6 +13,9 @@ class BmiScreen extends StatefulWidget {
 }
 
 class _BMIScreenState extends State<BmiScreen> {
+  bool isMalePressed = true;
+  bool isFemalePressed = false;
+  int age = 22;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,13 +30,31 @@ class _BMIScreenState extends State<BmiScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  GenderWidget(
-                    color: kMaleColor,
-                    icon: Icons.male_outlined,
+                  GestureDetector(
+                    child: GenderWidget(
+                      color: kMaleColor,
+                      isPressed: isMalePressed,
+                      icon: Icons.male_outlined,
+                    ),
+                    onTap: () {
+                      setState(() {
+                        isMalePressed = true;
+                        isFemalePressed = false;
+                      });
+                    },
                   ),
-                  GenderWidget(
-                    color: kFemaleColor,
-                    icon: Icons.female_outlined,
+                  GestureDetector(
+                    child: GenderWidget(
+                      color: kFemaleColor,
+                      isPressed: isFemalePressed,
+                      icon: Icons.female_outlined,
+                    ),
+                    onTap: () {
+                      setState(() {
+                        isMalePressed = false;
+                        isFemalePressed = true;
+                      });
+                    },
                   )
                 ],
               ),
@@ -44,9 +65,19 @@ class _BMIScreenState extends State<BmiScreen> {
               const SizedBox(
                 height: 20,
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [WeightWidget(), AgeWidget()],
+                children: [
+                  const WeightWidget(),
+                  AgeWidget(
+                    initialAge: age,
+                    onAgeChanged: (newAge) {
+                      setState(() {
+                        age = newAge;
+                      });
+                    },
+                  )
+                ],
               ),
               const SizedBox(
                 height: 40,
@@ -55,7 +86,10 @@ class _BMIScreenState extends State<BmiScreen> {
                 width: double.infinity,
                 child: FloatingActionButton(
                   onPressed: () {},
-                  child: const Text("Calculate Yours BMI"),
+                  child: const Text(
+                    "Calculate Yours BMI",
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
               )
             ],
