@@ -1,8 +1,8 @@
+import 'package:bmi_calculator/models/bmi_model.dart';
 import 'package:bmi_calculator/utilities/colors_palette.dart';
-import 'package:bmi_calculator/widgets/age_widget.dart';
+import 'package:bmi_calculator/widgets/counter_widget.dart';
 import 'package:bmi_calculator/widgets/gender_widget.dart';
 import 'package:bmi_calculator/widgets/height_widget.dart';
-import 'package:bmi_calculator/widgets/weight_widget.dart';
 import 'package:flutter/material.dart';
 
 class BmiScreen extends StatefulWidget {
@@ -15,9 +15,11 @@ class BmiScreen extends StatefulWidget {
 class _BMIScreenState extends State<BmiScreen> {
   bool isMalePressed = true;
   bool isFemalePressed = false;
-  int age = 22;
+
+  final BmiModel _bmiModel = BmiModel(gender: "male", age: 22, height: 170, weight: 70);
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
           title: const Text("BMI Calculator"),
@@ -38,6 +40,7 @@ class _BMIScreenState extends State<BmiScreen> {
                     ),
                     onTap: () {
                       setState(() {
+                        _bmiModel.gender = "male";
                         isMalePressed = true;
                         isFemalePressed = false;
                       });
@@ -51,6 +54,7 @@ class _BMIScreenState extends State<BmiScreen> {
                     ),
                     onTap: () {
                       setState(() {
+                        _bmiModel.gender = "female";
                         isMalePressed = false;
                         isFemalePressed = true;
                       });
@@ -61,19 +65,35 @@ class _BMIScreenState extends State<BmiScreen> {
               const SizedBox(
                 height: 20,
               ),
-              const HeightWidget(),
+              HeightWidget(
+                initialValue: _bmiModel.height,
+                onValueChanged: (newHeight) {
+                  setState(() {
+                    _bmiModel.height = newHeight;
+                  });
+                },
+              ),
               const SizedBox(
                 height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const WeightWidget(),
-                  AgeWidget(
-                    initialAge: age,
-                    onAgeChanged: (newAge) {
+                  CounterWidget(
+                    name: "Weight (cm)",
+                    initialValue: _bmiModel.weight,
+                    onValueChanged: (newWeight) {
                       setState(() {
-                        age = newAge;
+                        _bmiModel.weight = newWeight;
+                      });
+                    },
+                  ),
+                  CounterWidget(
+                    name: "Age",
+                    initialValue: _bmiModel.age,
+                    onValueChanged: (newAge) {
+                      setState(() {
+                        _bmiModel.age = newAge;
                       });
                     },
                   )
@@ -85,7 +105,28 @@ class _BMIScreenState extends State<BmiScreen> {
               SizedBox(
                 width: double.infinity,
                 child: FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _bmiModel.calculateBmi();
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SizedBox(
+                          width: double.infinity,
+                          height: size.height * 0.5,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text(_bmiModel.height.toString()),
+                              Text(_bmiModel.weight.toString()),
+                              Text(_bmiModel.age.toString()),
+                              Text(_bmiModel.gender),
+                              Text(_bmiModel.result.toString()),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
                   child: const Text(
                     "Calculate Yours BMI",
                     style: TextStyle(fontSize: 18),

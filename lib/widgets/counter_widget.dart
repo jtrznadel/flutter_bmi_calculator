@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 
-class AgeWidget extends StatefulWidget {
-  final int initialAge;
-  final ValueChanged<int> onAgeChanged;
-  const AgeWidget({super.key, this.initialAge = 22, required this.onAgeChanged});
+class CounterWidget extends StatefulWidget {
+  final int initialValue;
+  final ValueChanged<int> onValueChanged;
+  final String name;
+  const CounterWidget(
+      {super.key,
+      this.initialValue = 22,
+      required this.onValueChanged,
+      required this.name});
 
   @override
-  State<AgeWidget> createState() => _AgeWidgetState();
+  State<CounterWidget> createState() => _CounterWidget();
 }
 
-class _AgeWidgetState extends State<AgeWidget> {
-  late int age;
+class _CounterWidget extends State<CounterWidget> {
+  late int value;
 
   @override
   void initState() {
     super.initState();
-    age = widget.initialAge;
+    value = widget.initialValue;
   }
 
   @override
@@ -33,9 +38,9 @@ class _AgeWidgetState extends State<AgeWidget> {
           ],
           borderRadius: BorderRadius.all(Radius.circular(15))),
       child: Column(children: [
-        const Text(
-          "Age",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        Text(
+          widget.name,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         const SizedBox(
           height: 25,
@@ -46,13 +51,13 @@ class _AgeWidgetState extends State<AgeWidget> {
             IconButton(
                 onPressed: () {
                   setState(() {
-                    age -= 1;
-                    widget.onAgeChanged(age);
+                    value -= 1;
+                    widget.onValueChanged(value);
                   });
                 },
                 icon: const Icon(Icons.remove)),
             Text(
-              "$age",
+              "$value",
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
@@ -61,8 +66,8 @@ class _AgeWidgetState extends State<AgeWidget> {
             IconButton(
                 onPressed: () {
                   setState(() {
-                    age += 1;
-                    widget.onAgeChanged(age);
+                    value += 1;
+                    widget.onValueChanged(value);
                   });
                 },
                 icon: const Icon(Icons.add)),
