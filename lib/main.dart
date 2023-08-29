@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
-            textTheme: GoogleFonts.latoTextTheme(textTheme)),
+            textTheme: GoogleFonts.poppinsTextTheme(textTheme)),
         home: const BmiScreen());
   }
 }

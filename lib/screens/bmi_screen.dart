@@ -16,7 +16,7 @@ class _BMIScreenState extends State<BmiScreen> {
   bool isMalePressed = true;
   bool isFemalePressed = false;
 
-  final BmiModel _bmiModel = BmiModel(gender: "male", age: 22, height: 170, weight: 70);
+  final BmiModel _bmiModel = BmiModel("male", 22, 170, 70);
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -105,28 +105,7 @@ class _BMIScreenState extends State<BmiScreen> {
               SizedBox(
                 width: double.infinity,
                 child: FloatingActionButton(
-                  onPressed: () {
-                    _bmiModel.calculateBmi();
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return SizedBox(
-                          width: double.infinity,
-                          height: size.height * 0.5,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Text(_bmiModel.height.toString()),
-                              Text(_bmiModel.weight.toString()),
-                              Text(_bmiModel.age.toString()),
-                              Text(_bmiModel.gender),
-                              Text(_bmiModel.result.toString()),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  },
+                  onPressed: showResult,
                   child: const Text(
                     "Calculate Yours BMI",
                     style: TextStyle(fontSize: 18),
@@ -136,5 +115,60 @@ class _BMIScreenState extends State<BmiScreen> {
             ],
           ),
         ));
+  }
+
+  void showResult() {
+    _bmiModel.calculateBmi();
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        final size = MediaQuery.of(context).size;
+
+        return SizedBox(
+          width: double.infinity,
+          height: size.height * 0.35,
+          child: Padding(
+            padding: const EdgeInsets.all(30.0).copyWith(top: 20),
+            child: Column(
+              children: [
+                Text(
+                  'Your score is: ${(_bmiModel.result.score).toStringAsFixed(2)}',
+                  style: const TextStyle(fontSize: 24),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  _bmiModel.result.info,
+                  style: TextStyle(
+                    fontSize: 28,
+                    color: _bmiModel.result.color,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  _bmiModel.result.description,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.black),
+                ),
+                const SizedBox(
+                  height: 35,
+                ),
+                Text(
+                  _bmiModel.result.quote,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontStyle: FontStyle.italic,
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
